@@ -8,11 +8,14 @@
 
 #import "ViewController.h"
 
-@interface ViewController () <UIWebViewDelegate, UITextFieldDelegate>
+@interface ViewController () <UIWebViewDelegate, UITextFieldDelegate, UIScrollViewDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *featureButton;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UITextField *URLTextField;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *forwardButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property CGFloat yOffset;
 @end
 
 @implementation ViewController
@@ -21,9 +24,13 @@
 {
     [super viewDidLoad];
     self.URLTextField.delegate = self;
+    self.webView.scrollView.delegate = self;
+    self.URLTextField.alpha = 1;
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
+
+    self.titleLabel.text = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 
     if (self.webView.canGoBack) {
         self.backButton.enabled = YES;
@@ -36,18 +43,31 @@
     } else {
         self.forwardButton.enabled = NO;
     }
+
+    // Displays current url in textfield
+    NSURLRequest *currentRequest = [webView request];
+    NSURL *currentUrl = [currentRequest URL];
+    self.URLTextField.text = currentUrl.absoluteString;
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     [self.URLTextField resignFirstResponder];
 
-    NSString *urlString = [[NSString alloc] initWithFormat:@"http://%@.com", self.URLTextField.text ];
+    if ([self.URLTextField.text hasPrefix:@"http://"]) {
 
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    NSLog(@"%@", request);
-
-    [self.webView loadRequest:request];
-    [self.view addSubview:self.webView];
+        NSString *urlString =  self.URLTextField.text;
+        NSURL *url = [[NSURL alloc] initWithString:urlString];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [self.webView loadRequest:request];
+        [self.view addSubview:self.webView];
+    } else {
+        NSString *http = @"http://";
+        NSString *urlString = [http stringByAppendingString:self.URLTextField.text];
+        NSURL *url = [[NSURL alloc] initWithString:urlString];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [self.webView loadRequest:request];
+        [self.view addSubview:self.webView];
+    }
 
     return YES;
 }
@@ -62,6 +82,31 @@
 }
 - (IBAction)onReloadButtonPressed:(UIButton *)sender {
     [self.webView reload];
+}
+- (IBAction)onNewFeatureButtonPressed:(UIButton *)sender {
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Coming Soon!"
+                                                    message:nil
+                                                   delegate:self
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil, nil];
+
+    [alert show];
+
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.yOffset = scrollView.contentOffset.y;
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (self.yOffset > scrollView.contentOffset.y) {
+        self.URLTextField.alpha = 1;
+        self.titleLabel.hidden = YES;
+    } else if (self.yOffset < scrollView.contentOffset.y){
+        self.URLTextField.alpha = 0.0;
+        self.titleLabel.hidden = NO;
+    }
 }
 
 @end
