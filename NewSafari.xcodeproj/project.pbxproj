@@ -112,8 +112,6 @@
 		503AB74119D230DC00AD801C /* NewSafari */ = {
 			isa = PBXGroup;
 			children = (
-				503AB74A19D230DC00AD801C /* AppDelegate.h */,
-				503AB74B19D230DC00AD801C /* AppDelegate.m */,
 				503AB74D19D230DC00AD801C /* Main.storyboard */,
 				503AB75019D230DC00AD801C /* ViewController.h */,
 				503AB75119D230DC00AD801C /* ViewController.m */,
@@ -126,6 +124,8 @@
 		503AB74219D230DC00AD801C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				503AB74A19D230DC00AD801C /* AppDelegate.h */,
+				503AB74B19D230DC00AD801C /* AppDelegate.m */,
 				503AB74319D230DC00AD801C /* NewSafari-Info.plist */,
 				503AB74419D230DC00AD801C /* InfoPlist.strings */,
 				503AB74719D230DC00AD801C /* main.m */,
