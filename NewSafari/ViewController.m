@@ -101,11 +101,23 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (self.yOffset > scrollView.contentOffset.y) {
-        self.URLTextField.alpha = 1;
-        self.titleLabel.hidden = YES;
+
+        [UIView animateWithDuration:1.5 animations:^{
+            self.URLTextField.transform = CGAffineTransformMakeTranslation(0, 0);
+            self.titleLabel.hidden = YES;
+            self.titleLabel.alpha = 0.0;
+            self.URLTextField.alpha = 1;
+            self.URLTextField.hidden = NO;
+        }];
     } else if (self.yOffset < scrollView.contentOffset.y){
-        self.URLTextField.alpha = 0.0;
-        self.titleLabel.hidden = NO;
+
+        [UIView animateWithDuration:1.5 animations:^{
+            self.URLTextField.transform = CGAffineTransformMakeTranslation(30, 0);
+            self.URLTextField.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            self.titleLabel.hidden = NO;
+            self.titleLabel.alpha = 1;
+        }];
     }
 }
 
