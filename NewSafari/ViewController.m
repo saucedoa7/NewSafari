@@ -23,10 +23,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+
     self.URLTextField.delegate = self;
     self.webView.scrollView.delegate = self;
     self.URLTextField.alpha = 1;
 }
+
+-(void)webViewDidStartLoad:(UIWebView *)webView{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+
+}
+
+
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
 
@@ -48,6 +57,9 @@
     NSURLRequest *currentRequest = [webView request];
     NSURL *currentUrl = [currentRequest URL];
     self.URLTextField.text = currentUrl.absoluteString;
+
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
