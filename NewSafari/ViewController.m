@@ -61,16 +61,16 @@
         [self.webView loadRequest:request];
         [self.view addSubview:self.webView];
     } else {
-        NSString *http = @"http://";
+        NSString *http = @"http://google.com";
         NSString *urlString = [http stringByAppendingString:self.URLTextField.text];
         NSURL *url = [[NSURL alloc] initWithString:urlString];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [self.webView loadRequest:request];
         [self.view addSubview:self.webView];
     }
-
     return YES;
 }
+
 - (IBAction)onBackButtonPressed:(UIButton *)sender {
     [self.webView goBack];
 }
@@ -90,9 +90,7 @@
                                                    delegate:self
                                           cancelButtonTitle:@"Ok"
                                           otherButtonTitles:nil, nil];
-
     [alert show];
-
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -100,7 +98,7 @@
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (self.yOffset > scrollView.contentOffset.y) {
+    if (self.yOffset >= scrollView.contentOffset.y) {
 
         [UIView animateWithDuration:1.5 animations:^{
             self.URLTextField.transform = CGAffineTransformMakeTranslation(0, 0);
@@ -109,14 +107,15 @@
             self.URLTextField.alpha = 1;
             self.URLTextField.hidden = NO;
         }];
-    } else if (self.yOffset < scrollView.contentOffset.y){
+
+    } else {
 
         [UIView animateWithDuration:1.5 animations:^{
-            self.URLTextField.transform = CGAffineTransformMakeTranslation(30, 0);
+            self.URLTextField.transform = CGAffineTransformMakeTranslation(0, 0);
+            self.URLTextField.hidden = YES;
             self.URLTextField.alpha = 0.0;
-        } completion:^(BOOL finished) {
-            self.titleLabel.hidden = NO;
             self.titleLabel.alpha = 1;
+            self.titleLabel.hidden = NO;
         }];
     }
 }
